@@ -4,8 +4,10 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
+  //Un point important vu que tu utilises l'adaptateur PostgreSQL (driverAdapters) : cette fonctionnalité est encore en preview chez Prisma, donc il faut que ton schema.prisma déclare bien le flag correspondant dans le bloc generator
+  previewFeatures = ["driverAdapters"]
+   
 }
 
 datasource db {
