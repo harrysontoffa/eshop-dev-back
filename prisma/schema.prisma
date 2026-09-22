@@ -1,0 +1,224 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  
+}
+model Utilisateur {
+  idUtilisateur Int @id @default(autoincrement()) @map("id_utilisateur")
+  nom String 
+  prenom String
+  role String
+  mail String
+  telephone String
+  motDePasse  String @map("mot_de_passe")
+  date DateTime
+  pageGereePar Page[] @relation("pageGereePar")
+  commandesGereesParAdmin Commande[] @relation("commandesGereesParAdmin")
+  commandesDuClient Commande[] @relation("commandesDuClient")
+  adresse Adresse[]
+  message Message[]
+  articleCreeParAdmin Article[] @relation("articleCreeParAdmin")
+  clientEmetAvis Avis[] @relation("clientEmetAvis")
+  adminModereAvis Avis[] @relation("adminModereAvis")
+  favori Favori[]
+  producteur Producteur[]
+
+
+}
+
+model Adresse {
+  idAdresse Int @id @default(autoincrement()) @map("id_adresse")
+  rue String
+  codePostal String @map("code_postal")
+  ville String
+  pays String
+  
+  commande Commande[]
+
+  idUtilisateur Int @map("id_utilisateur")
+utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+
+}
+
+model Message {
+  idMessage Int @id @default(autoincrement()) @map("id_message")
+  nom String
+  prenom String
+  email String
+  sujet String
+  contenu String @db.Text 
+  dateEnvoi DateTime @map("date_envoi")
+
+idUtilisateur Int @map("id_utilisateur")
+utilisateur  Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  
+}
+
+model Commande {
+  idCommande Int @id @default(autoincrement()) @map("id_commande")
+  
+  dateCommande DateTime @map("date_commande")
+  statut String 
+  montantTotal Decimal 
+  LigneCommande LigneCommande[]
+  paiement Paiement[]
+
+
+  idAdresse Int @map("id_adresse")
+  adresse Adresse @relation(fields: [idAdresse], references: [idAdresse])
+  
+
+ idUtilisateurAdmin Int @map("id_utilisateur_admin")
+ utilisateurAdmin Utilisateur @relation("commandesGereesParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+ idUtilisateurClientConnecte Int @map("id_utilisateur_client_connectee")
+ utilisateurClient Utilisateur @relation("commandesDuClient" ,fields: [idUtilisateurClientConnecte], references: [idUtilisateur])
+
+
+}
+
+model Page {
+  idPage Int @id @default(autoincrement()) @map("id_page")
+  titre String
+  slug String
+  contenu String @db.Text
+  typePage String @map("type_page")
+idUtilisateurAdmin Int @map("id_utilisateur_admin")
+utilisateurAdmin Utilisateur @relation("pageGereePar", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+
+
+}
+
+model Article {
+  idArticle Int @id  @default(autoincrement()) @map("id_article")
+  titre String
+  slug String
+  contenu String @db.Text 
+  imageUrl String @map("image_url")
+  datePublication DateTime @map("date_publication")
+
+  idUtilisateurAdmin Int @map("id_utilisateur_admin")
+
+  utilisateurAdmin Utilisateur @relation("articleCreeParAdmin",fields: [idUtilisateurAdmin], references: [idUtilisateur])
+
+  }
+model Avis {
+  idAvis Int @id @default(autoincrement()) @map("id_avis")
+  note Int 
+  commentaire String
+  statut String
+  dateAvis DateTime @map("date_avis")
+
+  idUtilisateurClientConnectee Int @map("id_utilisateur_client_connectee")
+  utilisateurClientConnectee Utilisateur @relation("clientEmetAvis", fields: [idUtilisateurClientConnectee], references: [idUtilisateur])
+
+  idUtilisateurAdmin Int @map("id_utilisateur_admin")
+  UtilisateurAdmin Utilisateur @relation("adminModereAvis", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+  
+  idLigne Int @map("id_ligne")
+  ligne LigneCommande @relation(fields: [idLigne], references: [idLigne])
+
+}
+
+model LigneCommande {
+  idLigne Int @id @default(autoincrement()) @map("id_ligne")
+  quantite Int 
+  prixUnitaire Decimal @map("prix_unitaire")
+  sousTotal Decimal @map("sous_total")
+  avis Avis[]
+
+  idCommande Int @map("id_commande")
+  commande Commande @relation(fields: [idCommande], references: [idCommande])
+  idProduit Int @map("id_produit")
+  produit Produit @relation(fields: [idProduit] , references: [idProduit])
+}
+
+model Produit{
+  idProduit Int @default(autoincrement()) @id  @map("id_produit")
+  nom String
+  description String 
+  prixUnitaire Decimal @map("prix_unitaire")
+  stock Int 
+  photoUrl String @map("photo_url")
+  LigneCommande LigneCommande[]
+  favori Favori[]
+
+  idProducteur Int @map("id_producteur")
+
+  producteur Producteur @relation(fields: [idProducteur], references: [idProducteur])
+
+}
+
+model Favori {
+  idFavori Int @id @default(autoincrement()) @map("id_favori")
+  dateAjout DateTime @map("date_ajout")
+  idUtilisateur Int @map("id_utilisateur")
+  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  idProduit Int @map("id_produit")
+  produit Produit @relation(fields: [idProduit], references: [idProduit])
+}
+
+model Producteur {
+  idProducteur Int @id @default(autoincrement()) @map("id_producteur")
+  nom String
+  description String
+  specialite String
+  idUtilisateur Int @map("id_utilisateur")
+  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  
+  produit Produit[] 
+
+} 
+
+model Paiement {
+  idPaiement Int @id @default(autoincrement()) @map("id_paiement")
+  montant Decimal
+  datePaiement DateTime @map("date_paiement")
+  statut String
+  methode String
+  idCommande Int @map("id_commande")
+  commande Commande @relation(fields: [idCommande], references: [idCommande])
+  traiterPar TraiterPar[]
+}
+
+
+model PasserellePaiement {
+  idPasserelle  Int @id @default(autoincrement()) @map("id_passerelle")
+  nom String
+  type String
+  urlWebhook String
+  traiterPar TraiterPar[]
+}
+
+
+model TraiterPar{
+  idPaiement Int @map("id_paiement")
+  paiement Paiement @relation (fields: [idPaiement], references: [idPaiement])
+  
+  idPasserelle Int @map("id_passerelle")
+  passerelle PasserellePaiement @relation (fields: [idPasserelle], references: [idPasserelle])
+  
+  @@id([idPaiement, idPasserelle])
+}
+
+
+
+
+
+
+
+
+model newsLetterAbonne {
+  id_abonne Int @id @default(autoincrement()) @map("id_abonne")
+  email String
+  dateInscription DateTime @map("date_inscription")
+  consentement Boolean
+}
