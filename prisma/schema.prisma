@@ -22,7 +22,8 @@ model Utilisateur {
   mail String
   telephone String
   motDePasse  String @map("mot_de_passe")
-  date DateTime
+  date DateTime 
+  
   pageGereePar Page[] @relation("pageGereePar")
   commandesGereesParAdmin Commande[] @relation("commandesGereesParAdmin")
   commandesDuClient Commande[] @relation("commandesDuClient")
