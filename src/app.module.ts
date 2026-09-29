@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ConfigModule } from '@nestjs/config';
 import { UtilisateurModule } from './utilisateur/utilisateur.module';
+import { AdresseModule } from './adresse/adresse.module';
+import { MessageModule } from './message/message.module';
 
 // on importe dans le app module le configOmdule pour que il soit accessible dans toute les fichiers .Il sert à charger les variabl
 // es définies dans un fichier .env et à les rendre accessibles dans 
@@ -12,7 +14,7 @@ import { UtilisateurModule } from './utilisateur/utilisateur.module';
 @Module({
   imports: [PrismaModule, ConfigModule.forRoot({
     isGlobal: true
-  }), UtilisateurModule],  // forroot va enregistrer le service. on va lui donner la propiete isglobal true pour rendre le ConfigModul accessible a tous les autres modules
+  }), UtilisateurModule, AdresseModule, MessageModule],  // forroot va enregistrer le service. on va lui donner la propiete isglobal true pour rendre le ConfigModul accessible a tous les autres modules
   controllers: [AppController],
   providers: [AppService],
 })

@@ -28,7 +28,8 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
     constructor(private configService : ConfigService){
         // et maitenant vu que on as notre configService au lieu dutiliser process.env.DATABASE_URL on vva utiliser
         //  la methode get () avec notre 'DATABASE_URL'  en propertyPath pour acceder a nos variables d'environnement
-        const connectionString = configService.get('DTABASE_URL');
+           const connectionString = configService.get('DATABASE_URL');
+        
         const adapter = new PrismaPg({connectionString})
         super({adapter})
     }

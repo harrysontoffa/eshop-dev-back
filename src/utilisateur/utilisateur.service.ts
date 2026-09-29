@@ -1,8 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, Logger } from '@nestjs/common';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Utilisateur } from '../../generated/prisma/client';
+import { Utilisateur, Prisma } from '@prisma/client';
 
 // Avant dec ommencer nous devon mettre toutes les fonction en asynchrone
 // on va ensuite injecter dans le constructor notre service prisma por 
@@ -10,6 +10,7 @@ import { Utilisateur } from '../../generated/prisma/client';
 //ensuite nous allons lister ce PrismaService dans les providers dutilisateur module
 @Injectable()
 export class UtilisateurService {
+  private readonly logger = new Logger(UtilisateurService.name)
   constructor(private prisma: PrismaService){}
   // le promise sert a dire le type de cet element qui sera crere sera definis par le type recu de Utilisateur recu depuis prisa/client 
  async create(createUtilisateurDto: CreateUtilisateurDto): Promise<Utilisateur> {
@@ -21,6 +22,7 @@ export class UtilisateurService {
         data: createUtilisateurDto
       })
     } catch (error) {
+      this.logger.error(error)
       //envoyer une erreur 500 lorsque on as un probleme
       throw new InternalServerErrorException('Erreur lors de la creation de l\'utilisateur')
     }
@@ -31,6 +33,7 @@ export class UtilisateurService {
       // on va utiliser la methose findMany pour recupere tout les enregistrement de la table erreur
       return await this.prisma.utilisateur.findMany();
     } catch (error) {
+      this.logger.error(error)
       throw new InternalServerErrorException('Erreur lors de la récupération de la liste des Utilisateurs')
     }
   }
@@ -45,8 +48,9 @@ export class UtilisateurService {
       }
       return utilisateur
     } catch (error) {
-            throw new InternalServerErrorException(`Erreur lors de la recuperaction de L'utilisateur avec  l\'identifiant ${idUtilisateur}`)
-
+        if (error instanceof NotFoundException) throw error
+        this.logger.error(error)
+        throw new InternalServerErrorException(`Erreur lors de la récupération de l'utilisateur avec l'identifiant ${idUtilisateur}`)
     }
   }
 
@@ -57,9 +61,12 @@ export class UtilisateurService {
       data: updateUtilisateurDto
     })
    } catch (error) {
-                throw new InternalServerErrorException(`Erreur lors de la mise a jour  de L'utilisateur avec  l\'identifiant ${idUtilisateur}`)
-
-   }
+  if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+    throw new NotFoundException(`L'utilisateur avec l'identifiant ${idUtilisateur} n'existe pas`)
+  }
+  this.logger.error(error)
+  throw new InternalServerErrorException(`Erreur lors de la mise à jour de l'utilisateur avec l'identifiant ${idUtilisateur}`)
+}
   }
 // ici on va juste promise unmessage a afficher si tout se passe bien lors de la suppression
  async remove(idUtilisateur: number): Promise<{message: string}> {
@@ -69,9 +76,12 @@ export class UtilisateurService {
     })// si tout se passe bien on retourne le messafe suivant 
     return {message: `Utilisateur avec l\'identifiant ${idUtilisateur} supprimé avec succès`} 
   } catch (error) {
-                throw new InternalServerErrorException(`Erreur lors de la suppression de L'utilisateur avec  l\'identifiant ${idUtilisateur}`)
-
+  if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
+    throw new NotFoundException(`L'utilisateur avec l'identifiant ${idUtilisateur} n'existe pas`)
   }
+  this.logger.error(error)
+  throw new InternalServerErrorException(`Erreur lors de la suppression de l'utilisateur avec l'identifiant ${idUtilisateur}`)
+}
     
   }
 }
