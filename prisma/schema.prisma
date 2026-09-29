@@ -19,7 +19,7 @@ model Utilisateur {
   nom String 
   prenom String
   role String
-  mail String
+  mail String @unique
   telephone String
   motDePasse  String @map("mot_de_passe")
   date DateTime 
@@ -61,8 +61,8 @@ model Message {
   contenu String @db.Text 
   dateEnvoi DateTime @map("date_envoi")
 
-idUtilisateur Int @map("id_utilisateur")
-utilisateur  Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+idUtilisateur Int? @map("id_utilisateur")
+utilisateur  Utilisateur? @relation(fields: [idUtilisateur], references: [idUtilisateur])
   
 }
 
@@ -80,10 +80,10 @@ model Commande {
   adresse Adresse @relation(fields: [idAdresse], references: [idAdresse])
   
 
- idUtilisateurAdmin Int @map("id_utilisateur_admin")
- utilisateurAdmin Utilisateur @relation("commandesGereesParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
- idUtilisateurClientConnecte Int @map("id_utilisateur_client_connectee")
- utilisateurClient Utilisateur @relation("commandesDuClient" ,fields: [idUtilisateurClientConnecte], references: [idUtilisateur])
+ idUtilisateurAdmin Int? @map("id_utilisateur_admin")
+ utilisateurAdmin Utilisateur? @relation("commandesGereesParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+ idUtilisateurClientConnecte Int? @map("id_utilisateur_client_connectee")
+ utilisateurClient Utilisateur? @relation("commandesDuClient" ,fields: [idUtilisateurClientConnecte], references: [idUtilisateur])
 
 
 }
@@ -91,7 +91,7 @@ model Commande {
 model Page {
   idPage Int @id @default(autoincrement()) @map("id_page")
   titre String
-  slug String
+  slug String @unique
   contenu String @db.Text
   typePage String @map("type_page")
 idUtilisateurAdmin Int @map("id_utilisateur_admin")
@@ -103,7 +103,7 @@ utilisateurAdmin Utilisateur @relation("pageGereePar", fields: [idUtilisateurAdm
 model Article {
   idArticle Int @id  @default(autoincrement()) @map("id_article")
   titre String
-  slug String
+  slug String @unique
   contenu String @db.Text 
   imageUrl String @map("image_url")
   datePublication DateTime @map("date_publication")
@@ -179,13 +179,20 @@ model Producteur {
   
   produit Produit[] 
 
+}
+enum StatutPaiement {
+  EN_ATTENTE
+  REUSSI
+  ECHOUE
+  REMBOURSE
 } 
 
-model Paiement {
+model Paiement { 
+  
   idPaiement Int @id @default(autoincrement()) @map("id_paiement")
   montant Decimal
   datePaiement DateTime @map("date_paiement")
-  statut String
+  statut StatutPaiement @default(EN_ATTENTE)
   methode String
   idCommande Int @map("id_commande")
   commande Commande @relation(fields: [idCommande], references: [idCommande])
@@ -219,9 +226,9 @@ model TraiterPar{
 
 
 
-model newsLetterAbonne {
+model NewsletterAbonne {
   id_abonne Int @id @default(autoincrement()) @map("id_abonne")
-  email String
+  email String @unique
   dateInscription DateTime @map("date_inscription")
   consentement Boolean
 }
