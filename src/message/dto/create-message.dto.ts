@@ -6,5 +6,5 @@ export class CreateMessageDto {
   sujet: string
   contenu: string  
   dateEnvoi: Date  
-  idUtilisateur: number
+  idUtilisateur?: number
 }

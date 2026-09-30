@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, Logger, ConflictException } from '@nestjs/common';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -22,6 +22,9 @@ export class UtilisateurService {
         data: createUtilisateurDto
       })
     } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+              throw new ConflictException('Cet email est déjà utilisé')
+      }
       this.logger.error(error)
       //envoyer une erreur 500 lorsque on as un probleme
       throw new InternalServerErrorException('Erreur lors de la creation de l\'utilisateur')
@@ -61,6 +64,9 @@ export class UtilisateurService {
       data: updateUtilisateurDto
     })
    } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+  throw new ConflictException('Cet email est déjà utilisé')
+}
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
     throw new NotFoundException(`L'utilisateur avec l'identifiant ${idUtilisateur} n'existe pas`)
   }
