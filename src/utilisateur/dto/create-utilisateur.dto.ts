@@ -2,9 +2,10 @@ export class CreateUtilisateurDto {
  
   nom: string 
   prenom: string
-  role: string
   mail: string
   telephone: string
   motDePasse:  string 
-  date: Date
+  
 }
+// ici on retire role date et idUtilisateur, car la base met la date et l'idUtilisateur elle meme grace au @default(now()) et @default(autoincrement())
+// ln role se choisit cote serveur jamais par celui qui sinscrit
