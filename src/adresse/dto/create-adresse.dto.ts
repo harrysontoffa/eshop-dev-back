@@ -2,7 +2,8 @@ import { IsString, IsNotEmpty, MaxLength, Matches,IsOptional, IsInt } from "clas
 export class CreateAdresseDto {
 @IsString({message:'La rue doit être une chaîne de caractères'})
 @IsNotEmpty({message:'La rue est requise'})
-@MaxLength(255, { message: 'La rue doit contenir au plus 255 caractères' })  rue: string
+@MaxLength(255, { message: 'La rue doit contenir au plus 255 caractères' })  
+rue: string
 
  @Matches(/^\d{5}$/, { message: 'Le code postal doit contenir 5 chiffres' })
   codePostal: string 
