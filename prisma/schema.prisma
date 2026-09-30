@@ -13,15 +13,22 @@ datasource db {
   provider = "postgresql"
   
 }
+
+enum Role {
+  ADMIN
+  CLIENT_CONNECTE
+}
+
+
 model Utilisateur {
   idUtilisateur Int @id @default(autoincrement()) @map("id_utilisateur")
   nom String 
   prenom String
-  role String
+  role Role @default(CLIENT_CONNECTE)
   mail String @unique
   telephone String
   motDePasse  String @map("mot_de_passe")
-  date DateTime 
+  dateCreation DateTime @default(now()) @map("date_creation") 
   
   pageGereePar Page[] @relation("pageGereePar")
   commandesGereesParAdmin Commande[] @relation("commandesGereesParAdmin")
