@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import {  Prisma,Role } from '@prisma/client';
 import {Utilisateur} from '../utilisateur/entities/utilisateur.entity'
 import * as bcrypt from 'bcryptjs' 
+
 //Le Salt est une chaîne de caractères aléatoires ajoutée au mot de passe avant le hachage. Cela garantit que deux utilisateurs
 //  ayant le même mot de passe (ex: 123456) auront deux hashs totalement différents en base de données, bloquant ainsi 
 // les attaques par "tables arc-en-ciel" (Rainbow Tables).
@@ -18,7 +19,7 @@ type UtilisateurPublic = Omit<Utilisateur, 'motDePasse'>
 @Injectable()
 export class UtilisateurService {
   private readonly logger = new Logger(UtilisateurService.name)
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService ){}
   // le promise sert a dire le type de cet element qui sera crere sera definis par le type recu de Utilisateur recu depuis prisa/client 
  async create(createUtilisateurDto: CreateUtilisateurDto): Promise<UtilisateurPublic> {
   //toujour utiliser un trycath pour capter les erreurs 
@@ -94,12 +95,18 @@ export class UtilisateurService {
     }
   }
 
-  async findByMail(mail: string):Promise<UtilisateurPublic | null>{
+   async findByMail(mail: string){ // le type est deuis automatiquement par ts
 
     try {
       return await this.prisma.utilisateur.findUnique({
-        where: {mail}
-      })
+        where: {mail},
+        select: {
+          idUtilisateur: true,
+          mail: true,
+          role: true,
+          motDePasse: true,
+      }
+    })
       
     } catch (error) {
         
@@ -107,7 +114,7 @@ export class UtilisateurService {
         throw new InternalServerErrorException(`Erreur lors de la récupération du mail: ${mail}`)
     }
   }
-
+  
  async update(idUtilisateur: string, updateUtilisateurDto: UpdateUtilisateurDto):Promise<UtilisateurPublic> {
    try {
     //si le mot de passe est modifier il faut le rehasher
