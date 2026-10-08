@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
 import { AdresseService } from './adresse.service';
 import { CreateAdresseDto } from './dto/create-adresse.dto';
 import { UpdateAdresseDto } from './dto/update-adresse.dto';
@@ -18,17 +18,17 @@ export class AdresseController {
   }
 
   @Get(':id')
-   async findOne(@Param('id') id: string) {
-     return await this.adresseService.findOne(+id);
+   async findOne(@Param('id', ParseUUIDPipe) id: string) {
+     return await this.adresseService.findOne(id);
   }
 
   @Patch(':id')
-   async update(@Param('id') id: string, @Body() updateAdresseDto: UpdateAdresseDto) {
-     return await this.adresseService.update(+id, updateAdresseDto);
+   async update(@Param('id', ParseUUIDPipe) id: string, @Body() updateAdresseDto: UpdateAdresseDto) {
+     return await this.adresseService.update(id, updateAdresseDto);
   }
 
   @Delete(':id')
-   async remove(@Param('id') id: string) {
-     return await this.adresseService.remove(+id);
+   async remove(@Param('id', ParseUUIDPipe) id: string) {
+     return await this.adresseService.remove(id);
   }
 }

@@ -29,7 +29,7 @@ export class AdresseService {
     }
   }
 
-  async  findOne(idAdresse: number): Promise<Adresse> {
+  async  findOne(idAdresse: string): Promise<Adresse> {
     try {
       const adresse = await this.prisma.adresse.findUnique({
         where: {idAdresse}
@@ -46,7 +46,7 @@ export class AdresseService {
     }
   }
 
-   async update(idAdresse: number, updateAdresseDto: UpdateAdresseDto): Promise<Adresse> {
+   async update(idAdresse: string, updateAdresseDto: UpdateAdresseDto): Promise<Adresse> {
     try {
       return await this.prisma.adresse.update({
         where: {idAdresse},
@@ -62,7 +62,7 @@ export class AdresseService {
     }
   }
 
-   async remove(idAdresse: number) {
+   async remove(idAdresse: string) {
     try {
       await this.prisma.adresse.delete({
         where: {idAdresse}

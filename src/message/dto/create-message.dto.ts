@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MaxLength, IsEmail, IsOptional, IsInt } from 'class-validator'
+import { IsString, IsNotEmpty, MaxLength, IsEmail, IsOptional, IsUUID } from 'class-validator'
 
 export class CreateMessageDto {
   @IsString({ message: 'Le nom doit être une chaîne de caractères' })
@@ -25,6 +25,6 @@ export class CreateMessageDto {
   contenu: string
 
   @IsOptional()
-  @IsInt({ message: "L'identifiant utilisateur doit être un nombre entier" })
-  idUtilisateur?: number
+  @IsUUID()
+  idUtilisateur?: string
 }

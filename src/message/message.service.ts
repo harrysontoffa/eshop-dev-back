@@ -38,7 +38,7 @@ export class MessageService {
    
   }
 
-  async findOne(idMessage: number):Promise<Message> {
+  async findOne(idMessage: string):Promise<Message> {
 
     try {
        const message =  await this.prisma.message.findUnique({
@@ -58,7 +58,7 @@ export class MessageService {
     }
   }
 
-  async update(idMessage: number, updateMessageDto: UpdateMessageDto):Promise<Message> {
+  async update(idMessage: string, updateMessageDto: UpdateMessageDto):Promise<Message> {
     try {
       return await this.prisma.message.update({
         where: {idMessage},
@@ -75,7 +75,7 @@ export class MessageService {
     }
   }
 
-  async remove(idMessage: number):Promise<{message: string}> {
+  async remove(idMessage: string):Promise<{message: string}> {
     try {
       await this.prisma.message.delete({
         where: {idMessage}

@@ -77,7 +77,7 @@ export class UtilisateurService {
     }
   }
 // ici on attend en promise Utilisateur
- async findOne(idUtilisateur: number): Promise<UtilisateurPublic | null> {
+ async findOne(idUtilisateur: string): Promise<UtilisateurPublic | null> {
     try {
       const utilisateur = await this.prisma.utilisateur.findUnique({
         omit: { motDePasse: true },
@@ -108,7 +108,7 @@ export class UtilisateurService {
     }
   }
 
- async update(idUtilisateur: number, updateUtilisateurDto: UpdateUtilisateurDto):Promise<UtilisateurPublic> {
+ async update(idUtilisateur: string, updateUtilisateurDto: UpdateUtilisateurDto):Promise<UtilisateurPublic> {
    try {
     //si le mot de passe est modifier il faut le rehasher
     //et on etablie un if() pour que si le mot de passe est declarer on le recupere et on le hash
@@ -137,7 +137,7 @@ export class UtilisateurService {
 }
   }
 // ici on va juste promise unmessage a afficher si tout se passe bien lors de la suppression
- async remove(idUtilisateur: number): Promise<{message: string}> {
+ async remove(idUtilisateur: string): Promise<{message: string}> {
   try {
     await this.prisma.utilisateur.delete({
       where: {idUtilisateur}

@@ -5,13 +5,10 @@
 
 generator client {
   provider = "prisma-client-js"
- 
-   
 }
 
 datasource db {
   provider = "postgresql"
-  
 }
 
 enum Role {
@@ -19,56 +16,51 @@ enum Role {
   CLIENT_CONNECTE
 }
 
-
 model Utilisateur {
-  idUtilisateur Int @id @default(autoincrement()) @map("id_utilisateur")
-  nom String 
-  prenom String
-  role Role @default(CLIENT_CONNECTE)
-  mail String @unique
-  telephone String
-  motDePasse  String @map("mot_de_passe")
-  dateCreation DateTime @default(now()) @map("date_creation") 
-  
-  pageGereePar Page[] @relation("pageGereePar")
-  commandesGereesParAdmin Commande[] @relation("commandesGereesParAdmin")
-  commandesDuClient Commande[] @relation("commandesDuClient")
-  adresse Adresse[]
-  message Message[]
-  articleCreeParAdmin Article[] @relation("articleCreeParAdmin")
-  clientEmetAvis Avis[] @relation("clientEmetAvis")
-  adminModereAvis Avis[] @relation("adminModereAvis")
-  favori Favori[]
-  producteur Producteur[]
+  idUtilisateur String   @id @default(uuid()) @map("id_utilisateur") @db.Uuid
+  nom           String
+  prenom        String
+  role          Role     @default(CLIENT_CONNECTE)
+  mail          String   @unique
+  telephone     String
+  motDePasse    String   @map("mot_de_passe")
+  dateCreation  DateTime @default(now()) @map("date_creation")
 
-
+  pageGereePar            Page[]       @relation("pageGereePar")
+  commandesGereesParAdmin Commande[]   @relation("commandesGereesParAdmin")
+  commandesDuClient       Commande[]   @relation("commandesDuClient")
+  adresse                 Adresse[]
+  message                 Message[]
+  articleCreeParAdmin     Article[]    @relation("articleCreeParAdmin")
+  clientEmetAvis          Avis[]       @relation("clientEmetAvis")
+  adminModereAvis         Avis[]       @relation("adminModereAvis")
+  favori                  Favori[]
+  producteur              Producteur[]
 }
 
 model Adresse {
-  idAdresse Int @id @default(autoincrement()) @map("id_adresse")
-  rue String
+  idAdresse  String @id @default(uuid()) @map("id_adresse") @db.Uuid
+  rue        String
   codePostal String @map("code_postal")
-  ville String
-  pays String
-  
-  commande Commande[]
-  idUtilisateur Int? @map("id_utilisateur")
-  utilisateur Utilisateur? @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  ville      String
+  pays       String
 
+  commande      Commande[]
+  idUtilisateur String?      @map("id_utilisateur") @db.Uuid
+  utilisateur   Utilisateur? @relation(fields: [idUtilisateur], references: [idUtilisateur])
 }
 
 model Message {
-  idMessage Int @id @default(autoincrement()) @map("id_message")
-  nom String
-  prenom String
-  email String
-  sujet String
-  contenu String @db.Text 
-  dateEnvoi DateTime @map("date_envoi")
+  idMessage String   @id @default(uuid()) @map("id_message") @db.Uuid
+  nom       String
+  prenom    String
+  email     String
+  sujet     String
+  contenu   String   @db.Text
+  dateEnvoi DateTime @default(now()) @map("date_envoi")
 
-idUtilisateur Int? @map("id_utilisateur")
-utilisateur  Utilisateur? @relation(fields: [idUtilisateur], references: [idUtilisateur])
-  
+  idUtilisateur String?      @map("id_utilisateur") @db.Uuid
+  utilisateur   Utilisateur? @relation(fields: [idUtilisateur], references: [idUtilisateur])
 }
 
 enum StatutCommande {
@@ -80,164 +72,155 @@ enum StatutCommande {
   ECHOUEE
 }
 
-
 model Commande {
-  idCommande Int @id @default(autoincrement()) @map("id_commande")
-  dateCommande DateTime @map("date_commande")
-  statut  StatutCommande @default(EN_ATTENTE)
-  montantTotal Decimal 
-  emailContact String @map("email_contact")
-  nomContact String @map("nom_contact")
-  prenomContact String @map("prenom_contact")
-  telephoneContact String @map("telephone_contact")
+  idCommande       String         @id @default(uuid()) @map("id_commande") @db.Uuid
+  dateCommande     DateTime       @default(now()) @map("date_commande")
+  statut           StatutCommande @default(EN_ATTENTE)
+  montantTotal     Decimal        @map("montant_total") @db.Decimal(10, 2)
+  emailContact     String         @map("email_contact")
+  nomContact       String         @map("nom_contact")
+  prenomContact    String         @map("prenom_contact")
+  telephoneContact String         @map("telephone_contact")
 
-  LigneCommande LigneCommande[]
-  paiement Paiement[]
-  idAdresse Int @map("id_adresse")
-  adresse Adresse @relation(fields: [idAdresse], references: [idAdresse])
-  idUtilisateurAdmin Int? @map("id_utilisateur_admin")
-  utilisateurAdmin Utilisateur? @relation("commandesGereesParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
-  idUtilisateurClientConnecte Int? @map("id_utilisateur_client_connectee")
-  utilisateurClient Utilisateur? @relation("commandesDuClient" ,fields: [idUtilisateurClientConnecte], references: [idUtilisateur])
-
-
+  LigneCommande               LigneCommande[]
+  paiement                    Paiement[]
+  idAdresse                   String          @map("id_adresse") @db.Uuid
+  adresse                     Adresse         @relation(fields: [idAdresse], references: [idAdresse])
+  idUtilisateurAdmin          String?         @map("id_utilisateur_admin") @db.Uuid
+  utilisateurAdmin            Utilisateur?    @relation("commandesGereesParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+  idUtilisateurClientConnecte String?         @map("id_utilisateur_client_connectee") @db.Uuid
+  utilisateurClient           Utilisateur?    @relation("commandesDuClient", fields: [idUtilisateurClientConnecte], references: [idUtilisateur])
 }
 
 model Page {
-  idPage Int @id @default(autoincrement()) @map("id_page")
-  titre String
-  slug String @unique
-  contenu String @db.Text
+  idPage   String @id @default(uuid()) @map("id_page") @db.Uuid
+  titre    String
+  slug     String @unique
+  contenu  String @db.Text
   typePage String @map("type_page")
 
-  idUtilisateurAdmin Int @map("id_utilisateur_admin")
-  utilisateurAdmin Utilisateur @relation("pageGereePar", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+  idUtilisateurAdmin String      @map("id_utilisateur_admin") @db.Uuid
+  utilisateurAdmin   Utilisateur @relation("pageGereePar", fields: [idUtilisateurAdmin], references: [idUtilisateur])
 }
 
 model Article {
-  idArticle Int @id  @default(autoincrement()) @map("id_article")
-  titre String
-  slug String @unique
-  contenu String @db.Text 
-  imageUrl String @map("image_url")
-  datePublication DateTime @map("date_publication")
+  idArticle       String   @id @default(uuid()) @map("id_article") @db.Uuid
+  titre           String
+  slug            String   @unique
+  contenu         String   @db.Text
+  imageUrl        String   @map("image_url")
+  datePublication DateTime @default(now()) @map("date_publication")
 
-  idUtilisateurAdmin Int @map("id_utilisateur_admin")
-  utilisateurAdmin Utilisateur @relation("articleCreeParAdmin",fields: [idUtilisateurAdmin], references: [idUtilisateur])
-  }
+  idUtilisateurAdmin String      @map("id_utilisateur_admin") @db.Uuid
+  utilisateurAdmin   Utilisateur @relation("articleCreeParAdmin", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+}
+
 model Avis {
-  idAvis Int @id @default(autoincrement()) @map("id_avis")
-  note Int 
+  idAvis      String   @id @default(uuid()) @map("id_avis") @db.Uuid
+  note        Int
   commentaire String?
-  statut String
-  dateAvis DateTime @map("date_avis")
+  statut      String
+  dateAvis    DateTime @default(now()) @map("date_avis")
 
-  idUtilisateurClientConnectee Int @map("id_utilisateur_client_connectee")
-  utilisateurClientConnectee Utilisateur @relation("clientEmetAvis", fields: [idUtilisateurClientConnectee], references: [idUtilisateur])
-  idUtilisateurAdmin Int? @map("id_utilisateur_admin")
-  UtilisateurAdmin Utilisateur? @relation("adminModereAvis", fields: [idUtilisateurAdmin], references: [idUtilisateur])
-  idLigne Int @map("id_ligne")
-  ligne LigneCommande @relation(fields: [idLigne], references: [idLigne])
+  idUtilisateurClientConnectee String        @map("id_utilisateur_client_connectee") @db.Uuid
+  utilisateurClientConnectee   Utilisateur   @relation("clientEmetAvis", fields: [idUtilisateurClientConnectee], references: [idUtilisateur])
+  idUtilisateurAdmin           String?       @map("id_utilisateur_admin") @db.Uuid
+  UtilisateurAdmin             Utilisateur?  @relation("adminModereAvis", fields: [idUtilisateurAdmin], references: [idUtilisateur])
+  idLigne                      String        @map("id_ligne") @db.Uuid
+  ligne                        LigneCommande @relation(fields: [idLigne], references: [idLigne])
 }
 
 model LigneCommande {
-  idLigne Int @id @default(autoincrement()) @map("id_ligne")
-  quantite Int 
-  prixUnitaire Decimal @map("prix_unitaire")
-  sousTotal Decimal @map("sous_total")
-  avis Avis[]
+  idLigne      String  @id @default(uuid()) @map("id_ligne") @db.Uuid
+  quantite     Int
+  prixUnitaire Decimal @map("prix_unitaire") @db.Decimal(10, 2)
+  sousTotal    Decimal @map("sous_total") @db.Decimal(10, 2)
+  avis         Avis[]
 
-  idCommande Int @map("id_commande")
-  commande Commande @relation(fields: [idCommande], references: [idCommande])
-  idProduit Int @map("id_produit")
-  produit Produit @relation(fields: [idProduit] , references: [idProduit])
+  idCommande String   @map("id_commande") @db.Uuid
+  commande   Commande @relation(fields: [idCommande], references: [idCommande])
+  idProduit  String   @map("id_produit") @db.Uuid
+  produit    Produit  @relation(fields: [idProduit], references: [idProduit])
 }
 
-model Produit{
-  idProduit Int @default(autoincrement()) @id  @map("id_produit")
-  nom String
-  description String 
-  prixUnitaire Decimal @map("prix_unitaire")
-  stock Int 
-  photoUrl String @map("photo_url")
+model Produit {
+  idProduit    String  @id @default(uuid()) @map("id_produit") @db.Uuid
+  nom          String
+  description  String
+  prixUnitaire Decimal @map("prix_unitaire") @db.Decimal(10, 2)
+  stock        Int
+  photoUrl     String  @map("photo_url")
 
   LigneCommande LigneCommande[]
-  favori Favori[]
-  idProducteur Int @map("id_producteur")
-  producteur Producteur @relation(fields: [idProducteur], references: [idProducteur])
+  favori        Favori[]
+  idProducteur  String          @map("id_producteur") @db.Uuid
+  producteur    Producteur      @relation(fields: [idProducteur], references: [idProducteur])
 }
 
 model Favori {
-  idFavori Int @id @default(autoincrement()) @map("id_favori")
-  dateAjout DateTime @map("date_ajout")
+  idFavori  String   @id @default(uuid()) @map("id_favori") @db.Uuid
+  dateAjout DateTime @default(now()) @map("date_ajout")
 
-  idUtilisateur Int @map("id_utilisateur")
-  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
-  idProduit Int @map("id_produit")
-  produit Produit @relation(fields: [idProduit], references: [idProduit])
+  idUtilisateur String      @map("id_utilisateur") @db.Uuid
+  utilisateur   Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  idProduit     String      @map("id_produit") @db.Uuid
+  produit       Produit     @relation(fields: [idProduit], references: [idProduit])
+
+  @@unique([idUtilisateur, idProduit])
 }
 
 model Producteur {
-  idProducteur Int @id @default(autoincrement()) @map("id_producteur")
-  nom String
-  description String
-  specialite String
+  idProducteur String @id @default(uuid()) @map("id_producteur") @db.Uuid
+  nom          String
+  description  String
+  specialite   String
 
-  idUtilisateur Int @map("id_utilisateur")
-  utilisateur Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
-  produit Produit[] 
+  idUtilisateur String      @map("id_utilisateur") @db.Uuid
+  utilisateur   Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
+  produit       Produit[]
 }
+
 enum StatutPaiement {
   EN_ATTENTE
   EN_COURS
   VALIDE
   REFUSE
-} 
-
-
-model Paiement { 
-  idPaiement Int @id @default(autoincrement()) @map("id_paiement")
-  montant Decimal
-  datePaiement DateTime? @map("date_paiement")
-  methode String
-  stripeSessionId String? @unique @map("stripe_session_id")
-  statut StatutPaiement @default(EN_ATTENTE)
- 
-  idCommande Int @map("id_commande")
-  commande Commande @relation(fields: [idCommande], references: [idCommande])
-  traiterPar TraiterPar[]
 }
 
+model Paiement {
+  idPaiement      String         @id @default(uuid()) @map("id_paiement") @db.Uuid
+  montant         Decimal        @db.Decimal(10, 2)
+  datePaiement    DateTime?      @map("date_paiement")
+  methode         String
+  stripeSessionId String?        @unique @map("stripe_session_id")
+  statut          StatutPaiement @default(EN_ATTENTE)
+
+  idCommande String       @map("id_commande") @db.Uuid
+  commande   Commande     @relation(fields: [idCommande], references: [idCommande])
+  traiterPar TraiterPar[]
+}
 
 model PasserellePaiement {
-  idPasserelle  Int @id @default(autoincrement()) @map("id_passerelle")
-  nom String
-  type String
-  urlWebhook String
-  traiterPar TraiterPar[]
+  idPasserelle String       @id @default(uuid()) @map("id_passerelle") @db.Uuid
+  nom          String
+  type         String
+  urlWebhook   String       @map("url_webhook")
+  traiterPar   TraiterPar[]
 }
 
+model TraiterPar {
+  idPaiement String   @map("id_paiement") @db.Uuid
+  paiement   Paiement @relation(fields: [idPaiement], references: [idPaiement])
 
-model TraiterPar{
-  idPaiement Int @map("id_paiement")
-  paiement Paiement @relation (fields: [idPaiement], references: [idPaiement])
-  
-  idPasserelle Int @map("id_passerelle")
-  passerelle PasserellePaiement @relation (fields: [idPasserelle], references: [idPasserelle])
-  
+  idPasserelle String             @map("id_passerelle") @db.Uuid
+  passerelle   PasserellePaiement @relation(fields: [idPasserelle], references: [idPasserelle])
+
   @@id([idPaiement, idPasserelle])
 }
 
-
-
-
-
-
-
-
 model NewsletterAbonne {
-  idAbonne Int @id @default(autoincrement()) @map("id_abonne")
-  email String @unique
-  dateInscription DateTime @map("date_inscription")
-  consentement Boolean
+  idAbonne        String   @id @default(uuid()) @map("id_abonne") @db.Uuid
+  email           String   @unique
+  dateInscription DateTime @default(now()) @map("date_inscription")
+  consentement    Boolean
 }
