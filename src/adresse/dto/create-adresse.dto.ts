@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MaxLength, Matches,IsOptional, IsInt } from "class-validator"
+import { IsString, IsNotEmpty, MaxLength, Matches,IsOptional, IsUUID } from "class-validator"
 export class CreateAdresseDto {
 @IsString({message:'La rue doit être une chaîne de caractères'})
 @IsNotEmpty({message:'La rue est requise'})
@@ -18,7 +18,7 @@ rue: string
   pays: string
 
   @IsOptional()
-  @IsInt({ message: "L'identifiant utilisateur doit être un nombre entier" })
-  idUtilisateur?: number 
+  @IsUUID()
+  idUtilisateur?: string 
 }
  
