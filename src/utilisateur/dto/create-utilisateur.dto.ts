@@ -24,6 +24,10 @@ export class CreateUtilisateurDto {
   @IsNotEmpty({message:'Le mot de passe est requis'})
   @MinLength(12, { message: 'Le mot de passe doit contenir au moins 12 caractères' })
   @MaxLength(72, { message: 'Le mot de passe doit contenir au plus 72 caractères' })
+  @Matches(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])(?!.*\s)(?!.*(.)\1\1).{12,72}$/,
+    {message: 'Le mot de passe doit contenir au moins une minuscule, une majuscule, un chiffre et un caractère spécial, sans espace ni 3 caractères identiques à la suite'}
+  )
   motDePasse:  string 
 
   

@@ -10,6 +10,7 @@ async function bootstrap() {
     forbidNonWhitelisted: true,  // rejette la requête si un champ inconnu est envoyé
     transform: true  // convertit automatiquement les types (ex: string → number)
   }))
+  app.enableCors({origin:'http://localhost:3000'})
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
