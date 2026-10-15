@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe, UseGuards } from '@nestjs/common';
 import { UtilisateurService } from './utilisateur.service';
 import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
-import { LoginUtilisateurDto } from './dto/LoginUtilisateur.dto';
-import { Observable } from 'rxjs';
+
+import { AuthGuard } from '../auth/auth.guard';
 
 // voicis notre controllers qui on ete genere lors de la creation du modul utilisateur grace a la commande nest generate resource Utilisateur
 // ces controller sont nos routes . on a une route pour chaque action du crud pour crer modifier supprimer et lister
@@ -18,7 +18,7 @@ export class UtilisateurController {
   }
   
 
-
+  @UseGuards(AuthGuard)
   @Get()
   async findAll() {
     return await this.utilisateurService.findAll();

@@ -9,7 +9,7 @@ import * as bcrypt from 'bcryptjs'
 //Le Salt est une chaîne de caractères aléatoires ajoutée au mot de passe avant le hachage. Cela garantit que deux utilisateurs
 //  ayant le même mot de passe (ex: 123456) auront deux hashs totalement différents en base de données, bloquant ainsi 
 // les attaques par "tables arc-en-ciel" (Rainbow Tables).
-const SALT_ROUNDS= 10
+export const SALT_ROUNDS= 10
 //import du type utilisateur sans le mot de passe pour securité
 type UtilisateurPublic = Omit<Utilisateur, 'motDePasse'>
 // Avant dec ommencer nous devon mettre toutes les fonction en asynchrone
@@ -29,14 +29,14 @@ export class UtilisateurService {
       //on utilise la fonction hash fourni ar bcrypt et on 
       const hashedPassword = await bcrypt.hash(createUtilisateurDto.motDePasse, SALT_ROUNDS)
       return await this.prisma.utilisateur.create({
-        omit: { motDePasse: true },
+        omit: { motDePasse: true }, // Sans omit, il y aurait aussi une ligne "motDePasse": "$2b$10$...". Le omit sert à filtrer ce retour.
         data: {
           nom: createUtilisateurDto.nom,
           prenom: createUtilisateurDto.prenom,
           mail:createUtilisateurDto.mail,
           telephone: createUtilisateurDto.telephone,
           motDePasse: hashedPassword,
-          role: Role.CLIENT_CONNECTE  
+          role: Role.CLIENT_CONNECTE  // tous les comptes créer sont client pour que personne d'exterieur ne puisse modifer son role
 
         }
       })

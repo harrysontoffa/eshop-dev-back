@@ -8,6 +8,7 @@ import { AdresseModule } from './adresse/adresse.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
 
+
 // on importe dans le app module le configOmdule pour que il soit accessible dans toute les fichiers .Il sert à charger les variabl
 // es définies dans un fichier .env et à les rendre accessibles dans 
 // toute l'application via l'injection de dépendances, plutôt que d'utiliser directement process.env partout dans le code.
@@ -20,3 +21,4 @@ import { AuthModule } from './auth/auth.module';
   providers: [AppService],
 })
 export class AppModule {}
+ 
