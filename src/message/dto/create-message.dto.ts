@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MaxLength, IsEmail, IsOptional, IsUUID } from 'class-validator'
+import { IsString, IsNotEmpty, MaxLength, IsEmail } from 'class-validator'
 
 export class CreateMessageDto {
   @IsString({ message: 'Le nom doit être une chaîne de caractères' })
@@ -24,7 +24,5 @@ export class CreateMessageDto {
   @MaxLength(5000, { message: 'Le contenu doit contenir au plus 5000 caractères' })
   contenu: string
 
-  @IsOptional()
-  @IsUUID()
-  idUtilisateur?: string
+   
 }

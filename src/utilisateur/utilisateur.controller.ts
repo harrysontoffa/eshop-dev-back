@@ -26,17 +26,20 @@ export class UtilisateurController {
   async findAll() {
     return await this.utilisateurService.findAll();
   }
-
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get(':id')
    async findOne(@Param('id', ParseUUIDPipe) id: string) {
     return await this.utilisateurService.findOne(id);
   }
-
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Patch(':id')
    async update(@Param('id', ParseUUIDPipe) id: string, @Body() updateUtilisateurDto: UpdateUtilisateurDto) {
     return await this.utilisateurService.update(id, updateUtilisateurDto);
   }
-
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Delete(':id')
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     return await this.utilisateurService.remove(id);
