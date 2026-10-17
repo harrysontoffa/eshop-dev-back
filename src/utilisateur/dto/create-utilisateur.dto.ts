@@ -1,17 +1,29 @@
+import { Transform } from "class-transformer"
 import { IsNotEmpty, MinLength, MaxLength, IsEmail, Matches  } from "class-validator"
 export class CreateUtilisateurDto {
+   
  
-  
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
   
   @IsNotEmpty({message:'Le nom est requis'})
   @MinLength(3,{message:'Le nom doit contenir au moin 3 caractères'})
   @MaxLength(20,{message:'Le nom doit contenir au plus 20 caractères'})
   nom: string 
   
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim() : value,
+  )
+  
   @IsNotEmpty({message:'Le prenom est requis'})
   @MinLength(3,{message:'Le prenom doit contenir au moin 3 caractères'})
   @MaxLength(20,{message:'Le prenom doit contenir au plus 20 caractères'})
   prenom: string
+
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toLowerCase() : value,
+  )  // . Sans ce traitement, deux comptes peuvent exister pour la même adresse réelle. Le trim retire les espaces accidentels (copier-coller, espace de fin sur mobile). → trim + minuscules, les deux.
   
   @IsEmail({},{message:'le mail est invalide'})
   @IsNotEmpty({message:'le mail est requis'})

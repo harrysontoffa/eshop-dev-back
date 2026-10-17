@@ -4,7 +4,9 @@ import { CreateUtilisateurDto } from './dto/create-utilisateur.dto';
 import { UpdateUtilisateurDto } from './dto/update-utilisateur.dto';
 
 import { AuthGuard } from '../auth/auth.guard';
-
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '@prisma/client';     
 // voicis notre controllers qui on ete genere lors de la creation du modul utilisateur grace a la commande nest generate resource Utilisateur
 // ces controller sont nos routes . on a une route pour chaque action du crud pour crer modifier supprimer et lister
 // on va rendre aussi ici toutes nos fonctions asynchrone
@@ -18,7 +20,8 @@ export class UtilisateurController {
   }
   
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   @Get()
   async findAll() {
     return await this.utilisateurService.findAll();
