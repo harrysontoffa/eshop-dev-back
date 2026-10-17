@@ -3,12 +3,8 @@ import { LoginUtilisateurDto } from '../utilisateur/dto/LoginUtilisateur.dto'
 import { AuthService } from './services/auth.service'
 import { AuthGuard } from './auth.guard'
  import type { Request } from 'express';
- interface RequeteAuthentifiee extends Request {
-   user:{
-      sub: string;
-      role: string;
-   };
- }
+import type { RequeteAuthentifiee } from './interfaces/requete-authentifiee.interface';
+
 @Controller('auth')
 export class AuthController{
     constructor (private readonly authService: AuthService){}
