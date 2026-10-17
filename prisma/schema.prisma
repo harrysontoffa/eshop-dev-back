@@ -175,7 +175,7 @@ model Producteur {
   description  String
   specialite   String
 
-  idUtilisateur String      @map("id_utilisateur") @db.Uuid
+  idUtilisateur String      @map("id_utilisateur") @db.Uuid @unique
   utilisateur   Utilisateur @relation(fields: [idUtilisateur], references: [idUtilisateur])
   produit       Produit[]
 }

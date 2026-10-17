@@ -7,6 +7,7 @@ import { UtilisateurModule } from './utilisateur/utilisateur.module';
 import { AdresseModule } from './adresse/adresse.module';
 import { MessageModule } from './message/message.module';
 import { AuthModule } from './auth/auth.module';
+import { ProducteurModule } from './producteur/producteur.module';
 
 
 // on importe dans le app module le configOmdule pour que il soit accessible dans toute les fichiers .Il sert à charger les variabl
@@ -16,7 +17,7 @@ import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [PrismaModule, AuthModule,UtilisateurModule, ConfigModule.forRoot({
     isGlobal: true
-  }), UtilisateurModule, AdresseModule, MessageModule, AuthModule],  // forroot va enregistrer le service. on va lui donner la propiete isglobal true pour rendre le ConfigModul accessible a tous les autres modules
+  }), UtilisateurModule, AdresseModule, MessageModule, AuthModule, ProducteurModule],  // forroot va enregistrer le service. on va lui donner la propiete isglobal true pour rendre le ConfigModul accessible a tous les autres modules
   controllers: [AppController],
   providers: [AppService],
 })
