@@ -27,6 +27,7 @@ export class ProduitController {
       destination: './uploads/produits',
       filename: (req, file, cb) => cb(null, `${randomUUID()}${extname(file.originalname)}`),
     }),
+    limits:{fileSize:2*1024*1024} // limite de 2MO: Multer coupe la réception de limage au dela de 2 MO
   }))
   async create(@Body() createProduitDto: CreateProduitDto, 
    @UploadedFile(new ParseFilePipe({
