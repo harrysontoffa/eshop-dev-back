@@ -155,6 +155,7 @@ model Produit {
   favori        Favori[]
   idProducteur  String          @map("id_producteur") @db.Uuid
   producteur    Producteur      @relation(fields: [idProducteur], references: [idProducteur])
+  @@unique([idProducteur,nom]) //unicité d'un produit. un producteur ne peux pas avoir deux produits avec le meme nom mais deux producteurs différents si
 }
 
 model Favori {

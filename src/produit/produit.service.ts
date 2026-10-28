@@ -10,14 +10,14 @@ export class ProduitService {
   private readonly logger = new Logger(ProduitService.name)
   constructor(private readonly prisma: PrismaService){}
 
-  async create(createProduitDto: CreateProduitDto, idUtilisateur: string): Promise<Produit> {
+  async create(createProduitDto: CreateProduitDto,photoUrl: string, idUtilisateur: string): Promise<Produit> {
     try {
       return await this.prisma.produit.create({
         data: {nom: createProduitDto.nom,
                description: createProduitDto.description,
                prixUnitaire: createProduitDto.prixUnitaire,
                stock: createProduitDto.stock,
-               photoUrl: createProduitDto.photoUrl,
+              photoUrl: photoUrl,
                producteur: {connect: {idUtilisateur}} // rattache le produit au producteur de l'utilisateur connecte (idUtilisateur est @unique sur Producteur)
         }
       })
@@ -26,6 +26,9 @@ export class ProduitService {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025')
          {throw new NotFoundException('Aucun producteur n\'est associé à votre compte')}
             this.logger.error(error)
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+         throw new ConflictException('Vous avez déjà un produit avec ce nom');
+}      
 
             throw new InternalServerErrorException('Erreur lors de la creation du produit')
     }
